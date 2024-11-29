@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Station Map and Coordinate Checker</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Station Map and Coordinate Checker</h1>
+    <h2>Latitude/Longitude Coordinate Conversion Calculator and Verification</h2>
+    <p>If there are multiple stations, place a comma between them (up to 20).</p>
+    <form id="coordForm">
+        <label for="coordType">Select units:</label>
+        <select id="coordType" name="coordType" required>
+            <option value="">Select units</option>
+            <option value="d">Decimal degrees</option>
+            <option value="s">DMS (degrees, minutes, seconds)</option>
+        </select><br><br>
+
+        <div id="decimalInput" style="display:none;">
+            <label for="latDecimal">Enter latitudes in decimal (comma separated, up to 20):</label>
+            <input type="text" id="latDecimal" name="latDecimal"><br><br>
+            <label for="lonDecimal">Enter longitudes in decimal (comma separated, up to 20):</label>
+            <input type="text" id="lonDecimal" name="lonDecimal"><br><br>
+        </div>
+
+        <div id="dmsInput" style="display:none;">
+            <label for="latDeg">Enter latitude degrees with optional hemisphere suffix (N, S) (comma separated, up to 20):</label>
+            <input type="text" id="latDeg" name="latDeg"><br><br>
+            <label for="latMin">Enter latitude minutes (comma separated, up to 20):</label>
+            <input type="text" id="latMin" name="latMin"><br><br>
+            <label for="latSec">Enter latitude seconds (comma separated, up to 20):</label>
+            <input type="text" id="latSec" name="latSec"><br><br>
+
+            <label for="lonDeg">Enter longitude degrees with optional hemisphere suffix (E, W) (comma separated, up to 20):</label>
+            <input type="text" id="lonDeg" name="lonDeg"><br><br>
+            <label for="lonMin">Enter longitude minutes (comma separated, up to 20):</label>
+            <input type="text" id="lonMin" name="lonMin"><br><br>
+            <label for="lonSec">Enter longitude seconds (comma separated, up to 20):</label>
+            <input type="text" id="lonSec" name="lonSec"><br><br>
+        </div>
+
+        <label for="symbolSize">Select station symbol size:</label>
+        <input type="range" id="symbolSize" name="symbolSize" min="1" max="20" value="8"><br><br>
+
+        <button type="button" onclick="plotCoordinates()">Plot Coordinates</button><br><br>
+
+    </form>
+
+    <div id="map"></div>
+    <div id="table"></div>
+
+    <script>
+        document.getElementById('coordType').addEventListener('change', function() {
+            var coordType = this.value.toLowerCase();
+            if (coordType === 'd') {
+                document.getElementById('decimalInput').style.display = 'block';
+                document.getElementById('dmsInput').style.display = 'none';
+            } else if (coordType === 's') {
+                document.getElementById('decimalInput').style.display = 'none';
+                document.getElementById('dmsInput').style.display = 'block';
+            } else {
+                document.getElementById('decimalInput').style.display = 'none';
+                document.getElementById('dmsInput').style.display = 'none';
+            }
+        });
+
+        function standardToDecimal(degrees, minutes, seconds, direction) {
+            var decimal = degrees + (minutes / 60) + (seconds / 3600);
+            if (direction === 'S' || direction === 'W') {
+                decimal = -decimal;
+            }
+            return decimal;
+        }
+
+        function plotCoordinates() {
+            var coordType = document.getElementById('coordType').value.toLowerCase();
+            var latitudes = [];
+            var longitudes = [];
+            var symbolSize = document.getElementById('symbolSize').value;
+
+            if (coordType === 'd') {
+                latitudes = document.getElementById('latDecimal').value.split(',').map(Number);
+                longitudes = document.getElementById('lonDecimal').value.split(',').map(Number);
+            } else if (coordType === 's') {
+                var latDeg = document.getElementById('latDeg').value.split(',');
+                var latMin = document.getElementById('latMin').value.split(',').map(Number);
+                var latSec = document.getElementById('latSec').value.split(',').map(Number);
+                var lonDeg = document.getElementById('lonDeg').value.split(',');
+                var lonMin = document.getElementById('lonMin').value.split(',').map(Number);
+                var lonSec = document.getElementById('lonSec').value.split(',').map(Number);
+
+                for (var i = 0; i < latDeg.length; i++) {
+                    var latDirection = latDeg[i].slice(-1);
+                    var lonDirection = lonDeg[i].slice(-1);
+                    latitudes.push(standardToDecimal(parseInt(latDeg[i]), latMin[i], latSec[i], latDirection));
+                    longitudes.push(standardToDecimal(parseInt(lonDeg[i]), lonMin[i], lonSec[i], lonDirection));
+                }
+            } else {
+                alert("Invalid input. Please select units.");
+                return;
+            }
+
+            var data = [{
+                type: 'scattergeo',
+                mode: 'markers',
+                lat: latitudes,
+                lon: longitudes,
+                marker: { size: symbolSize }
+            }];
+
+            var layout = {
+                title: "Station Map and Coordinate Checker",
+                geo: { 
+                    scope: "world",
+                    showland: true,
+                    landcolor: "#808080"  // Grey color
+                }
+            };
+
+            Plotly.newPlot("map", data, layout);
+
+            showTable(latitudes, longitudes);
+        }
+
+        function showTable(latitudes, longitudes) {
+            var tableHTML = "<table border='1'><tr><th>Latitude (Decimal)</th><th>Longitude (Decimal)</th></tr>";
+            for (var i = 0; i < latitudes.length; i++) {
+                tableHTML += "<tr><td>" + latitudes[i] + "</td><td>" + longitudes[i] + "</td></tr>";
+            }
+            tableHTML += "</table>";
+
+            document.getElementById('table').innerHTML = tableHTML;
+        }
+    </script>
+</body>
+</html>

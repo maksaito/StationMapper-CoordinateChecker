@@ -34,9 +34,9 @@ def plot_coordinates(coord_type, latitudes, longitudes, show_gridlines, land_col
             lon_direction = lon_deg[i][-1]
             lat_deg_value = int(lat_deg[i][:-1])
             lon_deg_value = int(lon_deg[i][:-1])
-            lat_min_value = int(lat_min[i]) if lat_min[i] else 0
+            lat_min_value = float(lat_min[i]) if lat_min[i] else 0.0
             lat_sec_value = float(lat_sec[i]) if lat_sec[i] else 0.0
-            lon_min_value = int(lon_min[i]) if lon_min[i] else 0
+            lon_min_value = float(lon_min[i]) if lon_min[i] else 0.0
             lon_sec_value = float(lon_sec[i]) if lon_sec[i] else 0.0
             latitudes.append(standard_to_decimal(lat_deg_value, lat_min_value, lat_sec_value, lat_direction))
             longitudes.append(standard_to_decimal(lon_deg_value, lon_min_value, lon_sec_value, lon_direction))

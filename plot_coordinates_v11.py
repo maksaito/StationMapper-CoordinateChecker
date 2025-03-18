@@ -1,7 +1,6 @@
 # Ocean Station Plotter 
 # Mak Saito 2025
 # https://github.com/maksaito/StationMapper-CoordinateChecker/tree/main
-
 import streamlit as st
 import plotly.express as px
 import pandas as pd
@@ -103,12 +102,25 @@ if coord_type == "Decimal":
     lat_decimal = st.text_input("Enter latitudes in decimal (comma separated, up to 50):")
     lon_decimal = st.text_input("Enter longitudes in decimal (comma separated, up to 50):")
 elif coord_type == "DMS (degrees, minutes, seconds)":
-    lat_deg = st.text_input("Enter latitude degrees with optional hemisphere suffix (N, S) (comma separated, up to 50):")
-    lat_min = st.text_input("Enter latitude minutes (comma separated, up to 50):", key='lat_min')
-    lat_sec = st.text_input("Enter latitude seconds (comma separated, up to 50):", key='lat_sec')
-    lon_deg = st.text_input("Enter longitude degrees with optional hemisphere suffix (E, W) (comma separated, up to 50):")
-    lon_min = st.text_input("Enter longitude minutes (comma separated, up to 50):", key='lon_min')
-    lon_sec = st.text_input("Enter longitude seconds (comma separated, up to 50):", key='lon_sec')
+    if st.button("Show Example"):
+        example_lat_deg = "48N,48N,49N,49N,49N"
+        example_lat_min = "39,58.2,16.9,33.8,59.9"
+        example_lat_sec = "0,0,0,0,0"
+        example_lon_deg = "126W,130W,134W,138W,144W"
+        example_lon_min = "39.0,40.0,39.9,39.9,18.2"
+        example_lon_sec = "0,0,0,0,0"
+        st.session_state['lat_deg'] = example_lat_deg
+        st.session_state['lat_min'] = example_lat_min
+        st.session_state['lat_sec'] = example_lat_sec
+        st.session_state['lon_deg'] = example_lon_deg
+        st.session_state['lon_min'] = example_lon_min
+        st.session_state['lon_sec'] = example_lon_sec
+    lat_deg = st.text_input("Enter latitude degrees with optional hemisphere suffix (N, S) (comma separated, up to 50):", value=st.session_state.get('lat_deg', ''))
+    lat_min = st.text_input("Enter latitude minutes (comma separated, up to 50):", key='lat_min', value=st.session_state.get('lat_min', ''))
+    lat_sec = st.text_input("Enter latitude seconds (comma separated, up to 50):", key='lat_sec', value=st.session_state.get('lat_sec', ''))
+    lon_deg = st.text_input("Enter longitude degrees with optional hemisphere suffix (E, W) (comma separated, up to 50):", value=st.session_state.get('lon_deg', ''))
+    lon_min = st.text_input("Enter longitude minutes (comma separated, up to 50):", key='lon_min', value=st.session_state.get('lon_min', ''))
+    lon_sec = st.text_input("Enter longitude seconds (comma separated, up to 50):", key='lon_sec', value=st.session_state.get('lon_sec', ''))
 
 show_gridlines = st.selectbox("Show Gridlines:", [True, False], index=1)
 

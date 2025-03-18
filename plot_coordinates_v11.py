@@ -99,23 +99,19 @@ st.write("For multiple stations, place a comma between coordinates")
 
 coord_type = st.selectbox("Select coordinate type:", ["Decimal", "DMS (degrees, minutes, seconds)"])
 
+example_flag = st.button("Show Example")
+
 if coord_type == "Decimal":
     lat_decimal = st.text_input("Enter latitudes in decimal (comma separated, up to 50):")
     lon_decimal = st.text_input("Enter longitudes in decimal (comma separated, up to 50):")
 elif coord_type == "DMS (degrees, minutes, seconds)":
-    if st.button("Show Example"):
-        example_lat_deg = "48N,48N,49N,49N,49N"
-        example_lat_min = "39,58.2,16.9,33.8,59.9"
-        example_lat_sec = "0,0,0,0,0"
-        example_lon_deg = "126W,130W,134W,138W,144W"
-        example_lon_min = "39.0,40.0,39.9,39.9,18.2"
-        example_lon_sec = "0,0,0,0,0"
-        lat_deg = st.text_input("Enter latitude degrees with optional hemisphere suffix (N, S) (comma separated, up to 50):", value=example_lat_deg)
-        lat_min = st.text_input("Enter latitude minutes (comma separated, up to 50):", key='lat_min', value=example_lat_min)
-        lat_sec = st.text_input("Enter latitude seconds (comma separated, up to 50):", key='lat_sec', value=example_lat_sec)
-        lon_deg = st.text_input("Enter longitude degrees with optional hemisphere suffix (E, W) (comma separated, up to 50):", value=example_lon_deg)
-        lon_min = st.text_input("Enter longitude minutes (comma separated, up to 50):", key='lon_min', value=example_lon_min)
-        lon_sec = st.text_input("Enter longitude seconds (comma separated, up to 50):", key='lon_sec', value=example_lon_sec)
+    if example_flag:
+        lat_deg = st.text_input("Enter latitude degrees with optional hemisphere suffix (N, S) (comma separated, up to 50):", value="48N,48N,49N,49N,49N")
+        lat_min = st.text_input("Enter latitude minutes (comma separated, up to 50):", key='lat_min', value="39,58.2,16.9,33.8,59.9")
+        lat_sec = st.text_input("Enter latitude seconds (comma separated, up to 50):", key='lat_sec', value="0,0,0,0,0")
+        lon_deg = st.text_input("Enter longitude degrees with optional hemisphere suffix (E, W) (comma separated, up to 50):", value="126W,130W,134W,138W,144W")
+        lon_min = st.text_input("Enter longitude minutes (comma separated, up to 50):", key='lon_min', value="39.0,40.0,39.9,39.9,18.2")
+        lon_sec = st.text_input("Enter longitude seconds (comma separated, up to 50):", key='lon_sec', value="0,0,0,0,0")
     else:
         lat_deg = st.text_input("Enter latitude degrees with optional hemisphere suffix (N, S) (comma separated, up to 50):")
         lat_min = st.text_input("Enter latitude minutes (comma separated, up to 50):", key='lat_min')

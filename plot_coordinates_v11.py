@@ -1,7 +1,3 @@
-# Ocean Station Plotter 
-# Mak Saito 2025
-# https://github.com/maksaito/StationMapper-CoordinateChecker/tree/mainI see. This message appears because the widget is being initialized with a default value and then modified via the Session State API. To avoid this, we can set the default values directly in the widget initialization without using the Session State API.
-
 import streamlit as st
 import plotly.express as px
 import pandas as pd
@@ -27,6 +23,9 @@ def plot_coordinates(coord_type, latitudes, longitudes, show_gridlines, land_col
         latitudes = []
         longitudes = []
         for i in range(len(lat_deg)):
+            if not lat_deg[i] or not lon_deg[i]:
+                st.error("Latitude and longitude degrees cannot be empty.")
+                return
             if lat_deg[i][-1] not in ['N', 'S'] or lon_deg[i][-1] not in ['E', 'W']:
                 st.error("Please add N, S, E, or W to the degrees for latitude and longitude.")
                 return
